@@ -1,0 +1,38 @@
+.headers{
+    background-color:cadetblue;
+    text-align: center;
+    background-position: top;
+    display: flex;
+    padding: 50px;
+    align-items: center;
+    padding: 20px 50px;
+    justify-content:center;
+}
+
+.headers a{
+    padding-left: 20px;
+    color: pink;
+}
+
+.headers a:hover{
+    padding-left: 20px;
+    color: orange;
+}
+
+.headings{
+    text-align: center;
+    justify-content: center;
+}
+
+.footer{
+    background-color: black;
+    text-align: center;
+    padding-top: 30px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer a{
+    color: crimson; 
+}
