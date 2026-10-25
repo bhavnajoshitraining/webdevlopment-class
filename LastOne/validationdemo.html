@@ -1,0 +1,498 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HashMatNetworks - Social Network</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background:darkgray;
+            color:black;
+        }
+
+        header {
+            background:chocolate;
+            color: white;
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header input {
+            width: 280px;
+            max-width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+        }
+
+        .layout {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .panel, .post {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, textarea, button {
+            font: inherit;
+        }
+
+        .panel input, .panel textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: chocolate;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: maroon;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .post-header h3 {
+            margin: 0;
+        }
+
+        .post-content {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.5;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .post-actions button {
+            flex: 1;
+        }
+
+        .like-btn.liked {
+            background: red;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            border: 1px solid white;
+            border-radius: 5px;
+        }
+
+        .comment {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+
+        .stats {
+            color: grey;
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: chocolate;
+            color: white;
+        }
+
+        @media (max-width: 650px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                justify-content: center;
+            }
+
+            header input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>HashMatNetworks</h1>
+    <input type="text" id="searchInput" placeholder="Search posts...">
+</header>
+
+<div class="layout">
+
+    <aside>
+        <div class="panel">
+            <h2>Create Profile</h2>
+<!-- novalidate is an HTML attribute that disables the browser's built-in form validation when the user submits a form. -->
+            <form id="profileForm" novalidate>
+                <input type="text" id="userName" placeholder="Your name">
+                <span id="userError" class="error"></span>
+
+                <input type="email" id="userEmail" placeholder="Your email">
+                <span id="emailError" class="error"></span>
+
+                <button type="submit">Save Profile</button>
+                <p id="profileMessage"></p>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>Community Stats</h3>
+            <p id="postCount" class="stats">Posts: 0</p>
+            <p id="likeCount" class="stats">Likes: 0</p>
+            <p id="commentCount" class="stats">Comments: 0</p>
+        </div>
+    </aside>
+
+    <main>
+        <div class="panel">
+            <h2>Create a Post</h2>
+
+            <form id="postForm" novalidate>
+                <textarea id="postText" placeholder="What's on your mind?"></textarea>
+                <span id="postError" class="error"></span>
+                <button type="submit">Publish Post</button>
+            </form>
+        </div>
+
+        <section id="feed">
+            <h2>News Feed</h2>
+            <div id="postsContainer"></div>
+            <p id="emptyMessage">No posts yet. Create your first post!</p>
+        </section>
+    </main>
+
+</div>
+
+<footer>
+    <p>© 2026 HashMatNetworks | Powered by HashMatics Technologies</p>
+</footer>
+
+<script>
+    let currentUser = "Guest";
+
+    let posts = [
+        {
+            id: 1,
+            author: "Amit",
+            content: "Welcome to ConnectHub! Share your ideas with the community.",
+            likes: 2,
+            liked: false,
+            comments: [
+                { author: "Neha", text: "Great platform!" }
+            ]
+        },
+        {
+            id: 2,
+            author: "Neha",
+            content: "Today I started learning JavaScript. What are you learning?",
+            likes: 1,
+            liked: false,
+            comments: []
+        }
+    ];
+
+    const profileForm = document.getElementById("profileForm");
+    const postForm = document.getElementById("postForm");
+    const postsContainer = document.getElementById("postsContainer");
+    const searchInput = document.getElementById("searchInput");
+
+    function validateProfile(name, email) {
+        // ^ means the pattern starts checking from the beginning of the string.
+        // [^\s@]+ means one or more characters except whitespace and @.
+        // @ matches the @ symbol in the email address.
+        // [^\s@]+ after @ matches the domain name before the dot.
+        // \. matches the actual dot (.) in the email address.
+        // [^\s@]+ after the dot matches the ending, such as com or in.
+        // $ means the pattern must reach the end of the string.
+        // This regex checks the basic format of an email address.
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        document.getElementById("userError").textContent = "";
+        document.getElementById("emailError").textContent = "";
+
+        let valid = true;
+
+        if (name.length < 2) {
+            document.getElementById("userError").textContent =
+                "Enter a name with at least 2 characters.";
+            valid = false;
+        }
+
+        if (!emailPattern.test(email)) {
+            document.getElementById("emailError").textContent =
+                "Enter a valid email address.";
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    profileForm.addEventListener("submit", function(event) {
+        // event.preventDefault() prevents the browser's default action for an event.
+        // For a form submission, it prevents the page from reloading or navigating away.
+        // It allows JavaScript to validate the form and process the data manually.
+        event.preventDefault();
+
+        const name = document.getElementById("userName").value.trim();
+        const email = document.getElementById("userEmail").value.trim();
+
+        if (!validateProfile(name, email)) {
+            return;
+        }
+
+        currentUser = name;
+
+        document.getElementById("profileMessage").textContent =
+            "Welcome, " + currentUser + "!";
+
+        profileForm.reset();
+    });
+
+    function createPost(content) {
+        return {
+            id: Date.now() + Math.random(),
+            author: currentUser,
+            content: content,
+            likes: 0,
+            liked: false,
+            comments: []
+        };
+    }
+
+    postForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const postText = document.getElementById("postText").value.trim();
+        const postError = document.getElementById("postError");
+
+        postError.textContent = "";
+
+        if (postText.length < 2) {
+            postError.textContent = "Please enter at least 2 characters.";
+            return;
+        }
+        // createPost(postText) creates a new post object using the user's text.
+        // unshift() adds this new post to the beginning of the posts array,
+        // so the newest post appears first in the news feed.
+        posts.unshift(createPost(postText));
+        postForm.reset();
+        renderPosts();
+    });
+
+    function renderPosts() {
+        const query = searchInput.value.toLowerCase().trim();
+
+        const filteredPosts = posts.filter(function(post) {
+            return (
+                post.content.toLowerCase().includes(query) ||
+                post.author.toLowerCase().includes(query)
+            );
+        });
+
+        postsContainer.replaceChildren();
+
+        document.getElementById("emptyMessage").hidden =
+            filteredPosts.length !== 0;
+
+        filteredPosts.forEach(function(post) {
+            const card = document.createElement("article");
+            card.className = "post";
+
+            const header = document.createElement("div");
+            header.className = "post-header";
+
+            const author = document.createElement("h3");
+            author.textContent = post.author;
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.dataset.action = "delete";
+            deleteButton.dataset.id = post.id;
+
+            header.append(author, deleteButton);
+
+            const content = document.createElement("p");
+            content.className = "post-content";
+            content.textContent = post.content;
+
+            const stats = document.createElement("p");
+            stats.className = "stats";
+            stats.textContent =
+                post.likes + " likes · " +
+                post.comments.length + " comments";
+
+            const actions = document.createElement("div");
+            actions.className = "post-actions";
+
+            const likeButton = document.createElement("button");
+            likeButton.textContent = post.liked ? "Unlike" : "Like";
+            likeButton.className = post.liked ? "like-btn liked" : "like-btn";
+            likeButton.dataset.action = "like";
+            likeButton.dataset.id = post.id;
+
+            const commentButton = document.createElement("button");
+            commentButton.textContent = "Add Comment";
+            commentButton.dataset.action = "comment";
+            commentButton.dataset.id = post.id;
+
+            actions.append(likeButton, commentButton);
+
+            const commentInput = document.createElement("input");
+            commentInput.className = "comment-input";
+            commentInput.placeholder = "Write a comment...";
+            commentInput.dataset.inputFor = post.id;
+
+            const commentsArea = document.createElement("div");
+
+            post.comments.forEach(function(comment) {
+                const commentElement = document.createElement("div");
+                commentElement.className = "comment";
+                commentElement.textContent =
+                    comment.author + ": " + comment.text;
+                commentsArea.appendChild(commentElement);
+            });
+
+            card.append(
+                header,
+                content,
+                stats,
+                actions,
+                commentInput,
+                commentsArea
+            );
+
+            postsContainer.appendChild(card);
+        });
+
+        document.getElementById("postCount").textContent =
+            "Posts: " + posts.length;
+
+        document.getElementById("likeCount").textContent =
+            "Likes: " + posts.reduce(function(total, post) {
+                return total + post.likes;
+            }, 0);
+
+        document.getElementById("commentCount").textContent =
+            "Comments: " + posts.reduce(function(total, post) {
+                return total + post.comments.length;
+            }, 0);
+    }
+
+    searchInput.addEventListener("input", function() {
+        renderPosts();
+    });
+
+    postsContainer.addEventListener("click", function(event) {
+        const action = event.target.dataset.action;
+        const id = Number(event.target.dataset.id);
+
+        if (!action || !Number.isFinite(id)) {
+            return;
+        }
+
+        const post = posts.find(function(item) {
+            return item.id === id;
+        });
+
+        if (!post) {
+            return;
+        }
+
+        if (action === "like") {
+            post.liked = !post.liked;
+            post.likes += post.liked ? 1 : -1;
+        }
+
+        if (action === "delete") {
+            posts = posts.filter(function(item) {
+                return item.id !== id;
+            });
+        }
+
+        if (action === "comment") {
+            const input = postsContainer.querySelector(
+                '[data-input-for="' + id + '"]'
+            );
+
+            const text = input.value.trim();
+
+            if (text.length < 1) {
+                input.setCustomValidity("Please enter a comment.");
+                input.reportValidity();
+                input.setCustomValidity("");
+                return;
+            }
+
+            post.comments.push({
+                author: currentUser,
+                text: text
+            });
+        }
+
+        renderPosts();
+    });
+
+    renderPosts();
+</script>
+
+</body>
+</html>

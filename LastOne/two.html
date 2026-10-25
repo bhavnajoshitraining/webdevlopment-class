@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration Form</title>
+
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        form {
+            width: 300px;
+            margin: 30px auto;
+            padding: 15px;
+            border: 1px solid black;
+        }
+
+        input {
+            width: 100%;
+            padding: 6px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 8px 15px;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="myForm">
+        <h2>Registration Form</h2>
+
+        Name:
+        <input type="text" id="name">
+        <span class="error" id="nameError"></span>
+
+        Email:
+        <input type="text" id="email">
+        <span class="error" id="emailError"></span>
+
+        Password:
+        <input type="password" id="password">
+        <span class="error" id="passwordError"></span>
+
+        Confirm Password:
+        <input type="password" id="confirmPassword">
+        <span class="error" id="confirmError"></span>
+
+        <button type="submit">Register</button>
+
+        <p id="message"></p>
+    </form>
+
+    <script>
+        document.getElementById("myForm").addEventListener("submit",
+            function(event) {
+
+            event.preventDefault();
+
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value;
+            let confirmPassword =
+                document.getElementById("confirmPassword").value;
+
+            let valid = true;
+
+            // Clear previous messages
+            document.querySelectorAll(".error").forEach(function(e) {
+                e.textContent = "";
+            });
+
+            document.getElementById("message").textContent = "";
+
+            // Name validation
+            if (name === "") {
+                document.getElementById("nameError").textContent =
+                    "Name is required";
+                valid = false;
+            }
+
+            // Email validation
+            if (!email.includes("@") || !email.includes(".")) {
+                document.getElementById("emailError").textContent =
+                    "Enter a valid email";
+                valid = false;
+            }
+
+            // Password validation
+            if (password.length < 8) {
+                document.getElementById("passwordError").textContent =
+                    "Password must be at least 8 characters";
+                valid = false;
+            }
+
+            // Confirm password validation
+            if (confirmPassword !== password || confirmPassword === "") {
+                document.getElementById("confirmError").textContent =
+                    "Passwords do not match";
+                valid = false;
+            }
+
+            // Final result
+            if (valid) {
+                document.getElementById("message").textContent =
+                    "Registration successful!";
+
+                document.getElementById("message").style.color = "green";
+
+                document.getElementById("myForm").reset();
+            }
+        });
+    </script>
+
+</body>
+</html>
