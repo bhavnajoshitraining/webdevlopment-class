@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .myForm{
+            width: 300px;
+            text-align: center;
+            border: 2px solid black;
+            margin: 30px auto;
+            padding: 15px;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            display: block;
+            margin-top: 2px;
+        }
+    </style>
+    <script>
+           function validateForm() {
+            let name = document.getElementById("fname").value;
+            let age = document.getElementById("age").value;
+            let city = document.getElementById("city").value;
+            let course = document.getElementById("course").value;
+            let valid = true;
+            // localStorage.setItem("username", "Bhavna");
+            // let mname = localStorage.getItem("username");
+            // console.log(mname);
+            // localStorage.removeItem("username");
+            // let tasks = [
+            //     { id: 1, title: "Learn HTML", completed: true },
+            //     { id: 2, title: "Learn CSS", completed: false }
+            //     ];
+            // localStorage.setItem("tasks", JSON.stringify(tasks));
+            // let savedTasks = JSON.parse(localStorage.getItem("tasks"));
+            // console.log(savedTasks);
+            fetch("https://jsonplaceholder.typicode.com/users")
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error("Failed to fetch users");
+        }
+
+        return response.json();
+    })
+    .then(function(users) {
+        console.log(users);
+    })
+    .catch(function(error) {
+        console.log("Error:", error.message);
+    });
+
+
+            // console.log(name)
+            // document.getElementById("nameError").innerHTML = "";
+            // document.getElementById("AgeError").innerHTML = "";
+            // document.getElementById("cityError").innerHTML = "";
+            // document.getElementById("courseError").innerHTML = "";
+            
+
+        
+
+            // if (name === "") {
+            //     document.getElementById("nameError").innerHTML =
+            //         "Name is required";
+            //     valid = false;
+            // }
+
+            // if (age === "") {
+            //     document.getElementById("AgeError").innerHTML =
+            //         "Age is required";
+            //     valid = false;
+            // } else if (isNaN(age) || age < 1 || age > 90) {
+            //     document.getElementById("AgeError").innerHTML =
+            //         "Enter a valid age";
+            //     valid = false;
+            // }
+
+            // if (city === "") {
+            //     document.getElementById("cityError").innerHTML =
+            //         "City is required";
+            //     valid = false;
+            // }
+
+            // if (course === "") {
+            //     document.getElementById("courseError").innerHTML =
+            //         "Course is required";
+            //     valid = false;
+            // }
+
+            // if (valid) {
+            //     alert("Registration successful!");
+            // }
+
+            return false;
+        }
+
+       
+    </script>
+</head>
+<body>
+    <form class="myForm" onsubmit="return validateForm()">
+        <label for="Name">Name</label>
+        <input name="fname" id="fname">
+        <span class="error" id="nameError"></span>
+        <br><br>
+
+         <label for="age">Age</label>
+        <input name="age" id="age"><br><br>
+        <span class="error" id="AgeError"></span>
+
+         <label for="city">City</label>
+        <input name="city" id="city"><br><br>
+        <span class="city" id="cityError"></span>
+
+         <label for="course">Course</label>
+        <input name="course" id="course"><br><br>
+        <span class="error" id="courseError"></span>
+        
+        <button type="submit" >Ok</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo</title>
+    
+</head>
+<body>
+    <h1 class="ones" style="background-color: chocolate;">Hello</h1>
+    <h2 id="two" style="background-color: blueviolet;"> Bye</h2>
+
+    <button onclick="myfun()">myclick</button><br><br><br>
+    <button onclick="mynewfun()">new one</button>
+</body>
+<script>
+        function myfun(){
+        const heading= document.getElementsByClassName("ones")[0].innerText;
+        console.log(heading)
+        }
+
+        function mynewfun(){
+             document.getElementById("two").innerHTML="Hola";
+        }
+
+        document.getElementById("two").addEventListener("mouseover",function(event){
+            document.getElementById("two").style.backgroundColor="yellow";
+        })
+
+        document.getElementById("two").addEventListener("mouseout",function(event){
+            document.getElementById("two").style.backgroundColor="pink";
+        })
+    </script>
+</html>
+

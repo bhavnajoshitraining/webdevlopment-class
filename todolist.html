@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HashMatics To-Do List</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000015;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: navy;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 6px;
+            background: navy;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: royalblue;
+        }
+
+        #error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            margin-top: 12px;
+            background: #f1f5f9;
+            border-radius: 6px;
+        }
+
+        .task-text {
+            flex: 1;
+            overflow-wrap: anywhere;
+        }
+
+        .task.completed .task-text {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .task button {
+            padding: 8px 10px;
+        }
+
+        .delete-btn {
+            background: crimson;
+        }
+
+        .delete-btn:hover {
+            background: darkred;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        @media (max-width: 450px) {
+            form {
+                flex-direction: column;
+            }
+
+            .task {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>My To-Do List</h1>
+
+    <form id="taskForm">
+        <input
+            type="text"
+            id="taskInput"
+            placeholder="Enter a new task"
+        >
+
+        <button type="submit">Add Task</button>
+    </form>
+
+    <p id="error"></p>
+
+    <h2>My Tasks</h2>
+
+    <div id="taskList"></div>
+
+    <p id="emptyMessage">No tasks available. Add your first task!</p>
+
+    <p id="taskStats" class="stats"></p>
+
+</div>
+
+<script>
+    let tasks = [];
+
+    const taskForm = document.getElementById("taskForm");
+    const taskInput = document.getElementById("taskInput");
+    const taskList = document.getElementById("taskList");
+
+    function createTask(taskText) {
+        return {
+            id: Date.now() + Math.random(),
+            text: taskText,
+            completed: false
+        };
+    }
+
+    taskForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const taskText = taskInput.value.trim();
+
+        document.getElementById("error").textContent = "";
+
+        if (taskText === "") {
+            document.getElementById("error").textContent =
+                "Please enter a task!";
+            return;
+        }
+
+        tasks.unshift(createTask(taskText));
+
+        taskInput.value = "";
+
+        displayTasks();
+    });
+
+    function displayTasks() {
+        taskList.replaceChildren();
+
+        document.getElementById("emptyMessage").hidden =
+            tasks.length > 0;
+
+        tasks.forEach(function(task) {
+            const taskDiv = document.createElement("div");
+            taskDiv.className = task.completed
+                ? "task completed"
+                : "task";
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = task.completed;
+            checkbox.dataset.action = "toggle";
+            checkbox.dataset.id = task.id;
+            checkbox.setAttribute(
+                "aria-label",
+                "Mark " + task.text + " as completed"
+            );
+
+            const taskText = document.createElement("span");
+            taskText.className = "task-text";
+            taskText.textContent = task.text;
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.className = "delete-btn";
+            deleteButton.dataset.action = "delete";
+            deleteButton.dataset.id = task.id;
+            deleteButton.type = "button";
+
+            taskDiv.append(checkbox, taskText, deleteButton);
+            taskList.appendChild(taskDiv);
+        });
+
+        const completedCount = tasks.filter(function(task) {
+            return task.completed;
+        }).length;
+
+        document.getElementById("taskStats").textContent =
+            "Total Tasks: " + tasks.length +
+            " | Completed: " + completedCount +
+            " | Pending: " + (tasks.length - completedCount);
+    }
+
+    taskList.addEventListener("change", function(event) {
+        if (event.target.dataset.action === "toggle") {
+            const taskId = Number(event.target.dataset.id);
+
+            const task = tasks.find(function(item) {
+                return item.id === taskId;
+            });
+
+            if (task) {
+                task.completed = event.target.checked;
+                displayTasks();
+            }
+        }
+    });
+
+    taskList.addEventListener("click", function(event) {
+        if (event.target.dataset.action === "delete") {
+            const taskId = Number(event.target.dataset.id);
+
+            tasks = tasks.filter(function(task) {
+                return task.id !== taskId;
+            });
+
+            displayTasks();
+        }
+    });
+
+    displayTasks();
+</script>
+
+</body>
+</html>
