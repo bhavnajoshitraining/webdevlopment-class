@@ -48,16 +48,17 @@ body {
 /* 3. Opacity */
 
 .opacity {
-    opacity: 0.5;
+    opacity: 0.1;
 }
 
 
 /* 4. Filter */
 
 .filter {
-    transition: 0.3s;
+    width: 300px;
+    transition: 0.5s;
 }
 
 .filter:hover {
-    filter: grayscale(100%);
+    filter: brightness(200%);
 }
