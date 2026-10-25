@@ -1,0 +1,1325 @@
+# JavaScript Fundamentals 
+
+
+
+## Module 1: Functions and Scope
+
+### 1.1 What is a function?
+
+A function is a reusable block of code designed to perform a specific task. Instead of writing the same code repeatedly, we write it once and call it whenever required.
+
+For example, a training website may need to display a welcome message on multiple pages. We can create one function for this purpose.
+
+```
+function welcome() {
+    console.log("Welcome to HashMatics!");
+}
+
+welcome();
+welcome();
+```
+
+Output:
+
+```
+Welcome to HashMatics!
+Welcome to HashMatics!
+```
+
+ Defining a function creates the reusable block of code. Calling the function executes it.
+
+### 1.2 Function syntax
+
+```
+function functionName(parameters) {
+    // Statements
+    return result;
+}
+```
+
+| Part           | Meaning                            |
+| -------------- | ---------------------------------- |
+| `function`     | Keyword used to declare a function |
+| `functionName` | Name used to identify the function |
+| `parameters`   | Inputs accepted by the function    |
+| Function body  | Code executed when called          |
+| `return`       | Sends a result back to the caller  |
+
+### 1.3 Types of functions
+
+A. Function declaration
+
+```
+function add(a, b) {
+    return a + b;
+}
+
+let result = add(10, 20);
+console.log(result); // 30
+```
+
+B. Function expression
+
+A function is stored in a variable.
+
+```
+const multiply = function(a, b) {
+    return a * b;
+};
+
+console.log(multiply(4, 5)); // 20
+```
+
+C. Arrow function
+
+A shorter syntax introduced in ES6.
+
+```
+const subtract = (a, b) => {
+    return a - b;
+};
+
+console.log(subtract(10, 4)); // 6
+```
+
+For a single expression, we can simplify it further:
+
+```
+const square = n => n * n;
+
+console.log(square(5)); // 25
+```
+
+Important: Arrow functions do not have their own `this` or `arguments` binding, unlike regular functions. This matters when working with objects and event handlers.
+
+### 1.4 Parameters and arguments
+
+- Parameters: Variables listed in the function definition.
+- Arguments: Actual values passed when the function is called.
+
+```
+function greet(name) {
+    console.log("Hello, " + name);
+}
+
+greet("Bhavna");
+greet("Amit");
+```
+
+Here, `name` is a parameter, while `"Bhavna"` and `"Amit"` are arguments.
+
+### 1.5 Return value versus console.log()
+
+```
+function add1(a, b) {
+    console.log(a + b);
+}
+
+function add2(a, b) {
+    return a + b;
+}
+
+add1(2, 3);              // Displays 5
+let result = add2(2, 3);
+console.log(result * 2);  // Displays 10
+```
+
+`console.log()` displays information in the console. `return` sends a value back so the calling code can use it.
+
+A function without an explicit `return` returns `undefined`.
+
+### 1.6 Default parameters
+
+Default parameters provide a value when an argument is omitted or explicitly passed as `undefined`.
+
+```
+function greet(name = "Student") {
+    return `Welcome, ${name}!`;
+}
+
+console.log(greet());         // Welcome, Student!
+console.log(greet("Neha"));   // Welcome, Neha!
+```
+
+### 1.7 Scope in JavaScript
+
+Scope determines where a variable can be accessed.
+
+#### A. Global scope
+
+A variable declared outside functions and blocks is generally available throughout its accessible scope.
+
+```
+let institute = "HashMatics";
+
+function showInstitute() {
+    console.log(institute);
+}
+
+showInstitute();
+console.log(institute);
+```
+
+Output:
+
+```
+HashMatics
+HashMatics
+```
+
+#### B. Function scope
+
+Variables declared with `let` or `const` inside a function are accessible only within that function.
+
+```
+function calculate() {
+    let total = 100;
+    console.log(total); // 100
+}
+
+calculate();
+
+// console.log(total); // ReferenceError
+```
+
+#### C. Block scope
+
+Variables declared with `let` and `const` inside a block `{}` are limited to that block.
+
+```
+if (true) {
+    let age = 25;
+    const city = "Jodhpur";
+
+    console.log(age); // 25
+    console.log(city); // Jodhpur
+}
+
+// console.log(age); // ReferenceError
+```
+
+#### D. `var` versus `let` versus `const`
+
+| Feature                     | `var` | `let` | `const` |
+| --------------------------- | ----- | ----- | ------- |
+| Function scoped             | Yes   | Yes   | Yes     |
+| Block scoped                | No    | Yes   | Yes     |
+| Can reassign                | Yes   | Yes   | No      |
+| Can redeclare in same scope | Yes   | No    | No      |
+| Must initialize immediately | No    | No    | Yes     |
+
+Example:
+
+```
+if (true) {
+    var x = 10;
+    let y = 20;
+}
+
+console.log(x); // 10
+// console.log(y); // ReferenceError
+```
+
+Best practice: Prefer `const` by default and use `let` when reassignment is necessary. Avoid `var` in modern JavaScript unless you specifically need to teach its behavior.
+
+### 1.8 Hoisting
+
+Hoisting describes how JavaScript processes declarations before executing code.
+
+```
+sayHello();
+
+function sayHello() {
+    console.log("Hello!");
+}
+```
+
+This works because function declarations can be called before their textual position.
+
+Compare:
+
+```
+// console.log(score); // ReferenceError
+let score = 50;
+```
+
+Variables declared with `let` and `const` cannot be accessed before initialization. They are in the temporal dead zone from the start of their scope until their declaration is initialized.
+
+### 1.9 Closure
+
+
+A closure occurs when a function retains access to variables from its surrounding lexical scope, even after the outer function has finished executing.
+
+```
+function outer() {
+    let count = 0;
+
+    return function inner() {
+        count++;
+        return count;
+    };
+}
+
+const counter = outer();
+
+console.log(counter()); // 1
+console.log(counter()); // 2
+console.log(counter()); // 3
+```
+
+Practical use cases: Counters, maintaining private state, callbacks and some event-handler patterns.
+
+Function practice Home Work
+
+write functions that:
+
+1. Calculate the square of a number.
+2. Check whether a number is even or odd.
+3. Find the maximum of two numbers.
+4. Calculate factorial.
+5. Convert Celsius to Fahrenheit.
+6. Calculate the total price after applying a discount.
+
+## Module 2: Arrays and Objects
+
+### 2.1 What is an array?
+
+An array is a data structure used to store multiple values in a single variable. An array can contain strings, numbers, booleans, objects or even other arrays.
+
+```
+let studentNames = ["Amit", "Neha", "Ravi", "Pooja"];
+
+console.log(studentNames);
+```
+
+### 2.2 Creating and accessing arrays
+
+```
+let marks = [85, 92, 78, 88];
+
+console.log(marks[0]); // 85
+console.log(marks[1]); // 92
+console.log(marks[3]); // 88
+console.log(marks.length); // 4
+```
+
+Remember:
+
+- Array indexing starts from `0`.
+- The first element is at index `0`.
+- The last element is at index `array.length - 1`.
+- Accessing an index that does not exist normally returns `undefined`.
+
+### 2.3 Adding, updating and removing elements
+
+Common array methods
+
+| Method      | Purpose                   | Example          |
+| ----------- | ------------------------- | ---------------- |
+| `push()`    | Add at end                | `a.push(40)`     |
+| `pop()`     | Remove from end           | `a.pop()`        |
+| `unshift()` | Add at beginning          | `a.unshift(5)`   |
+| `shift()`   | Remove from beginning     | `a.shift()`      |
+| `splice()`  | Add or remove at an index | `a.splice(1, 1)` |
+| `slice()`   | Copy part of an array     | `a.slice(1, 3)`  |
+
+Practical example:
+
+```
+let courses = ["HTML", "CSS", "JavaScript"];
+
+courses.push("React");
+console.log(courses);
+// ["HTML", "CSS", "JavaScript", "React"]
+
+courses.pop();
+console.log(courses);
+// ["HTML", "CSS", "JavaScript"]
+
+courses[1] = "CSS3";
+console.log(courses);
+// ["HTML", "CSS3", "JavaScript"]
+```
+
+Important distinction: `splice()` modifies the original array, whereas `slice()` returns a portion without modifying the original array.
+
+### 2.4 Looping through arrays
+
+Using a traditional `for` loop
+
+```
+let numbers = [10, 20, 30, 40];
+
+for (let i = 0; i < numbers.length; i++) {
+    console.log(numbers[i]);
+}
+```
+
+Using `for...of`
+
+```
+for (let number of numbers) {
+    console.log(number);
+}
+```
+
+Using `forEach()`
+
+```
+numbers.forEach(function(number) {
+    console.log(number);
+});
+```
+
+Teaching point: Use `for...of` when you need to process each value. Use `forEach()` for an action on each element when you do not need to return a transformed array.
+
+### 2.5 Important array methods
+
+These methods are particularly useful in real-world applications.
+
+A. `map()` — transform each element
+
+```
+let numbers = [1, 2, 3, 4];
+
+let squares = numbers.map(n => n * n);
+
+console.log(squares);
+// [1, 4, 9, 16]
+```
+
+B. `filter()` — select matching elements
+
+```
+let marks = [35, 78, 42, 90, 28];
+
+let passed = marks.filter(mark => mark >= 40);
+
+console.log(passed);
+// [78, 42, 90]
+```
+
+C. `find()` — return the first matching element
+
+```
+let numbers = [10, 20, 30, 40];
+
+let answer = numbers.find(n => n > 25);
+
+console.log(answer); // 30
+```
+
+D. `reduce()` — combine values into one result
+
+```
+let prices = [100, 200, 300];
+
+let total = prices.reduce((sum, price) => sum + price, 0);
+
+console.log(total); // 600
+```
+
+E. `includes()` — check whether a value exists
+
+```
+let skills = ["Java", "Python", "JavaScript"];
+
+console.log(skills.includes("Python")); // true
+console.log(skills.includes("React"));  // false
+```
+
+F. `sort()` — sort elements
+
+```
+let numbers = [40, 5, 100, 20];
+
+numbers.sort((a, b) => a - b);
+
+console.log(numbers); // [5, 20, 40, 100]
+```
+
+Without a comparator, `sort()` sorts values as strings, which can give unexpected numeric results. It also modifies the original array.
+
+### 2.6 What is an object?
+
+An object stores related data as key-value pairs. Objects are useful for representing real-world entities such as students, employees, products and resumes.
+
+```
+const student = {
+    name: "Amit",
+    age: 21,
+    course: "Web Development",
+    city: "Jodhpur"
+};
+```
+
+Here, `name`, `age`, `course` and `city` are properties.
+
+### 2.7 Accessing object properties
+
+```
+console.log(student.name);
+console.log(student["age"]);
+```
+
+Both dot notation and bracket notation can access properties. Bracket notation is particularly useful when the property name is stored in a variable.
+
+```
+let key = "course";
+
+console.log(student[key]); // Web Development
+```
+
+### 2.8 Adding, updating and deleting properties
+
+```
+student.email = "amit@example.com"; // Add
+
+student.age = 22;                   // Update
+
+delete student.city;                // Delete
+
+console.log(student);
+```
+
+### 2.9 Methods inside objects
+
+An object can contain functions as property values. These are commonly called methods.
+
+```
+const employee = {
+    name: "Neha",
+    salary: 40000,
+
+    displayDetails: function() {
+        console.log(this.name);
+        console.log(this.salary);
+    }
+};
+
+employee.displayDetails();
+```
+
+The `this` keyword in this example refers to the object that invokes the method.
+
+### 2.10 Arrays of objects
+
+This is one of the most useful concepts for web development.
+
+```
+const employees = [
+    { id: 1, name: "Amit", salary: 30000 },
+    { id: 2, name: "Neha", salary: 45000 },
+    { id: 3, name: "Ravi", salary: 35000 }
+];
+
+console.log(employees[0].name); // Amit
+```
+
+Display employees earning more than ₹35,000:
+
+```
+const result = employees.filter(
+    employee => employee.salary > 35000
+);
+
+console.log(result);
+```
+
+Display only employee names:
+
+```
+const names = employees.map(employee => employee.name);
+
+console.log(names);
+// ["Amit", "Neha", "Ravi"]
+```
+
+### 2.11 Destructuring and spread syntax
+
+Object destructuring
+
+```
+const user = {
+    name: "Pooja",
+    city: "Jodhpur"
+};
+
+const { name, city } = user;
+
+console.log(name);
+console.log(city);
+```
+
+Array destructuring
+
+```
+const colors = ["Red", "Green", "Blue"];
+
+const [first, second] = colors;
+
+console.log(first);  // Red
+console.log(second); // Green
+```
+
+Spread syntax
+
+```
+const firstArray = [10, 20];
+const secondArray = [...firstArray, 30, 40];
+
+console.log(secondArray);
+// [10, 20, 30, 40]
+```
+
+For objects:
+
+```
+const original = { name: "Amit", age: 20 };
+
+const updated = { ...original, age: 21 };
+
+console.log(updated);
+```
+
+Spread creates a shallow copy; nested objects may still be shared between the original and copied structures.
+
+### 2.12 HomeWork
+
+1. Find the largest number in an array.
+2. Find the sum and average of all numbers.
+3. Remove duplicate values from an array.
+4. Count even and odd numbers.
+5. Sort student marks in ascending order.
+6. Create an employee object with name, ID and salary.
+7. Store five employees in an array of objects.
+8. Filter employees by salary and display their names.
+
+## Module 3: DOM Manipulation
+
+### 3.1 What is the DOM?
+
+DOM stands for Document Object Model. When a browser loads an HTML document, it creates a structured representation of its elements that JavaScript can access and modify.
+
+For example, JavaScript can:
+
+- Change text on a webpage.
+- Change CSS styles.
+- Hide or show elements.
+- Add or remove HTML elements.
+- Read values from form fields.
+
+Think of HTML as the page structure, CSS as its design, and JavaScript as the behavior.
+
+### 3.2 Selecting HTML elements
+
+Consider this HTML:
+
+```
+<h1 id="heading">Welcome</h1>
+
+<p class="message">Hello Student</p>
+
+<button id="btn">Click Me</button>
+```
+
+JavaScript provides several selection methods.
+
+| Method                     | Purpose                                |
+| -------------------------- | -------------------------------------- |
+| `getElementById()`         | Select an element by ID                |
+| `getElementsByClassName()` | Get elements by class name             |
+| `getElementsByTagName()`   | Get elements by tag name               |
+| `querySelector()`          | Select the first matching CSS selector |
+| `querySelectorAll()`       | Select all matching CSS selectors      |
+
+Examples:
+
+```
+const heading = document.getElementById("heading");
+
+const message = document.querySelector(".message");
+
+const button = document.querySelector("#btn");
+
+const allParagraphs = document.querySelectorAll("p");
+```
+
+`querySelectorAll()` returns a static `NodeList`, which can be iterated using `forEach()`.
+
+### 3.3 Changing content
+
+Using `textContent`
+
+```
+const heading = document.getElementById("heading");
+
+heading.textContent = "Welcome to HashMatics!";
+```
+
+Using `innerHTML`
+
+```
+heading.innerHTML = "<span>Learn JavaScript</span>";
+```
+
+Difference:
+
+- `textContent` treats the assigned value as text.
+- `innerHTML` parses the assigned value as HTML.
+
+Use `textContent` for ordinary user-provided text. Avoid placing untrusted input into `innerHTML`, because it can introduce cross-site scripting (XSS) vulnerabilities.
+
+### 3.4 Changing CSS styles
+
+```
+const heading = document.getElementById("heading");
+
+heading.style.color = "blue";
+heading.style.backgroundColor = "lightyellow";
+heading.style.fontSize = "32px";
+```
+
+Notice that CSS property names using hyphens become camelCase in JavaScript: `background-color` becomes `backgroundColor`.
+
+### 3.5 Adding and removing CSS classes
+
+HTML:
+
+```
+<p id="para">This is a paragraph.</p>
+```
+
+CSS:
+
+```
+.highlight {
+    color: white;
+    background-color: green;
+    padding: 10px;
+}
+```
+
+JavaScript:
+
+```
+const para = document.getElementById("para");
+
+para.classList.add("highlight");
+para.classList.remove("highlight");
+para.classList.toggle("highlight");
+```
+
+- `add()` applies a class.
+- `remove()` removes a class.
+- `toggle()` adds the class if absent and removes it if present.
+- `contains()` checks whether a class exists.
+
+### 3.6 Reading input values
+
+HTML:
+
+```
+<input type="text" id="username" placeholder="Enter your name">
+<button id="showBtn">Show Name</button>
+<p id="output"></p>
+```
+
+JavaScript:
+
+```
+const username = document.getElementById("username");
+const showBtn = document.getElementById("showBtn");
+const output = document.getElementById("output");
+
+showBtn.addEventListener("click", function() {
+    output.textContent = username.value;
+});
+```
+
+This is a basic interactive webpage: the user enters a name, clicks a button, and JavaScript displays the name.
+
+### 3.7 Creating and removing elements
+
+```
+<ul id="courseList"></ul>
+<button id="addCourse">Add Course</button>
+```
+
+```
+const courseList = document.getElementById("courseList");
+
+document.getElementById("addCourse").addEventListener("click", function() {
+    const li = document.createElement("li");
+
+    li.textContent = "JavaScript";
+    courseList.appendChild(li);
+});
+```
+
+To remove the last course:
+
+```
+courseList.lastElementChild?.remove();
+```
+
+The optional chaining operator `?.` prevents an error if there is no last child.
+
+### 3.8 Mini-project: Counter application
+
+This combines element selection, events, functions and DOM updates.
+
+LIVE DEMO
+
+## JavaScript Counter
+
+# 0
+
+&#x20;Decrease
+
+Reset
+
+&#x20;Increase
+
+Use the controls to demonstrate how event handlers update displayed state.
+
+The equivalent student implementation:
+
+```
+<h2 id="count">0</h2>
+<button id="decrease">-</button>
+<button id="reset">Reset</button>
+<button id="increase">+</button>
+```
+
+```
+let count = 0;
+
+const countElement = document.getElementById("count");
+
+document.getElementById("increase").addEventListener("click", function() {
+    count++;
+    countElement.textContent = count;
+});
+
+document.getElementById("decrease").addEventListener("click", function() {
+    count--;
+    countElement.textContent = count;
+});
+
+document.getElementById("reset").addEventListener("click", function() {
+    count = 0;
+    countElement.textContent = count;
+});
+```
+
+## Module 4: Events and Event Listeners
+
+### 4.1 What is an event?
+
+An event is an action or occurrence that JavaScript can respond to. It may be triggered by a user, such as clicking a button, or by the browser, such as finishing a page load.
+
+Examples:
+
+- Clicking a button.
+- Typing in a textbox.
+- Changing a dropdown selection.
+- Submitting a form.
+- Pressing a keyboard key.
+- Moving the mouse over an element.
+
+### 4.2 What is an event listener?
+
+An event listener waits for a specified event and runs a function when that event occurs.
+
+Syntax:
+
+```
+element.addEventListener("eventName", function() {
+    // Code to execute
+});
+```
+
+Example:
+
+```
+<button id="clickBtn">Click Here</button>
+```
+
+```
+const btn = document.getElementById("clickBtn");
+
+btn.addEventListener("click", function() {
+    alert("Button clicked!");
+});
+```
+
+Why use `addEventListener()`?
+
+- It separates HTML from JavaScript behavior.
+- Multiple listeners can be attached to the same element.
+- It supports many event types.
+- Listeners can be removed using `removeEventListener()` when the same function reference is supplied.
+
+### 4.3 Common JavaScript events
+
+| Event       | When it occurs                          | Example use                    |
+| ----------- | --------------------------------------- | ------------------------------ |
+| `click`     | Element is clicked                      | Button actions                 |
+| `dblclick`  | Element is double-clicked               | Special UI action              |
+| `input`     | Input value changes during editing      | Live validation                |
+| `change`    | A value change is committed             | Dropdown selection             |
+| `submit`    | Form is submitted                       | Form validation                |
+| `focus`     | Element receives focus                  | Highlight an input             |
+| `blur`      | Element loses focus                     | Validate after leaving a field |
+| `keydown`   | A key is pressed down                   | Keyboard shortcuts             |
+| `keyup`     | A key is released                       | Keyboard interaction           |
+| `mouseover` | Pointer enters an element or descendant | Hover behavior                 |
+| `mouseout`  | Pointer leaves an element or descendant | Undo hover behavior            |
+
+### 4.4 Click event example
+
+```
+<button id="colorBtn">Change Background</button>
+```
+
+```
+document.getElementById("colorBtn").addEventListener("click", function() {
+    document.body.style.backgroundColor = "lightblue";
+});
+```
+
+### 4.5 Input event example
+
+This displays the user's input immediately.
+
+```
+<input type="text" id="nameInput" placeholder="Type your name">
+<p id="liveOutput"></p>
+```
+
+```
+const input = document.getElementById("nameInput");
+const output = document.getElementById("liveOutput");
+
+input.addEventListener("input", function() {
+    output.textContent = "Hello, " + input.value;
+});
+```
+
+### 4.6 The event object
+
+The browser provides an event object to the event handler. It contains information about the event and its target.
+
+```
+document.getElementById("nameInput").addEventListener("input", function(event) {
+    console.log(event.type);
+    console.log(event.target);
+    console.log(event.target.value);
+});
+```
+
+Useful properties and methods include:
+
+- `event.type` — type of event.
+- `event.target` — element where the event originated.
+- `event.currentTarget` — element whose listener is currently executing.
+- `event.preventDefault()` — prevents the browser's default action when allowed.
+
+### 4.7 Keyboard event example
+
+```
+<input type="text" id="searchBox" placeholder="Type something">
+```
+
+```
+document.getElementById("searchBox").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        console.log("You pressed Enter");
+    }
+});
+```
+
+### 4.8 Form submission event
+
+```
+<form id="loginForm">
+    <input type="text" id="loginName" placeholder="Username">
+    <button type="submit">Login</button>
+</form>
+```
+
+```
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    console.log("Form submission handled by JavaScript");
+});
+```
+
+Without `preventDefault()`, the browser normally performs the form's default submission behavior, which can navigate or reload the page.
+
+### 4.9 Event bubbling
+
+When an event occurs on a nested element, it normally propagates upward through its ancestors. This is called event bubbling.
+
+```
+<div id="parent">
+    Parent
+    <button id="child">Child Button</button>
+</div>
+```
+
+```
+document.getElementById("parent").addEventListener("click", function() {
+    console.log("Parent clicked");
+});
+
+document.getElementById("child").addEventListener("click", function() {
+    console.log("Child clicked");
+});
+```
+
+Clicking the child button normally prints:
+
+```
+Child clicked
+Parent clicked
+```
+
+The child event handler executes first, followed by the parent handler during the bubbling phase.
+
+To stop further propagation:
+
+```
+document.getElementById("child").addEventListener("click", function(event) {
+    event.stopPropagation();
+    console.log("Child clicked");
+});
+```
+
+Use `stopPropagation()` only when needed; it can interfere with other components that rely on event propagation.
+
+### 4.10 Event delegation
+
+Event delegation means adding one listener to a parent element to handle events from its child elements. It is particularly useful when list items are added dynamically.
+
+```
+<ul id="tasks">
+    <li>Learn HTML</li>
+    <li>Learn CSS</li>
+    <li>Learn JavaScript</li>
+</ul>
+```
+
+```
+document.getElementById("tasks").addEventListener("click", function(event) {
+    if (event.target.matches("li")) {
+        console.log("Selected task:", event.target.textContent);
+    }
+});
+```
+
+This approach works for existing list items and new list items added later, as long as their events bubble to the parent.
+
+### 4.11 Removing an event listener
+
+```
+const button = document.getElementById("clickBtn");
+
+function showMessage() {
+    console.log("Hello!");
+}
+
+button.addEventListener("click", showMessage);
+
+// Later:
+button.removeEventListener("click", showMessage);
+```
+
+The callback reference must match. Writing a new anonymous function inside `removeEventListener()` will not remove the original listener.
+
+### 4.12 Practical exercises
+
+1. Change the background color when a button is clicked.
+2. Display a live character count while typing.
+3. Show an alert when a dropdown selection changes.
+4. Display a message when Enter is pressed.
+5. Build a show/hide password button.
+6. Create a to-do list using event delegation.
+7. Prevent a form from submitting when its inputs are invalid.
+
+## Module 5: Form Validation
+
+### 5.1 What is form validation?
+
+Form validation checks whether user-entered data satisfies the required rules before it is accepted or submitted.
+
+For example, a registration form might require:
+
+- Name must not be empty.
+- Email must have a valid format.
+- Mobile number must contain 10 digits for an Indian mobile-number field.
+- Password must satisfy the application's password rules.
+- Confirm password must match the password.
+
+Validation improves user experience and helps reduce invalid data.
+
+Important: Client-side validation is not a replacement for server-side validation. A user can bypass browser checks, so the server must validate submitted data independently.
+
+### 5.2 Types of validation
+
+A. HTML validation
+
+HTML provides built-in attributes such as `required`, `type="email"`, `minlength`, `maxlength` and `pattern`.
+
+```
+<input type="text" required minlength="3">
+<input type="email" required>
+<input type="password" required minlength="8">
+```
+
+B. JavaScript validation
+
+JavaScript allows us to implement custom rules, display specific error messages and control form behavior.
+
+```
+const name = document.getElementById("name").value.trim();
+
+if (name === "") {
+    console.log("Name is required");
+}
+```
+
+### 5.3 Important form properties and methods
+
+| Property or method       | Purpose                                  |
+| ------------------------ | ---------------------------------------- |
+| `input.value`            | Read the field value                     |
+| `input.value.trim()`     | Remove surrounding whitespace            |
+| `input.validity`         | Inspect browser validation state         |
+| `input.checkValidity()`  | Check constraint validity                |
+| `form.checkValidity()`   | Check validity of the form controls      |
+| `form.reportValidity()`  | Check validity and show browser feedback |
+| `event.preventDefault()` | Prevent default submission behavior      |
+| `setCustomValidity()`    | Set a custom validation message          |
+
+### 5.4 Inline validation and error messages
+
+Consider a registration form with name, email and password fields. We want to display each error message directly beneath the corresponding input.
+
+```
+<form id="registrationForm" novalidate>
+    <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name">
+        <span id="nameError" class="error"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" id="email">
+        <span id="emailError" class="error"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password">
+        <span id="passwordError" class="error"></span>
+    </div>
+
+    <button type="submit">Register</button>
+    <p id="successMessage"></p>
+</form>
+```
+
+CSS:
+
+```
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.error {
+    display: block;
+    color: red;
+    font-size: 13px;
+    min-height: 18px;
+}
+
+#successMessage {
+    color: green;
+}
+```
+
+Why use `display: block` and `min-height` on the error span?
+
+The error message appears immediately below its input, and the reserved height helps prevent the layout from jumping when the message appears.
+
+### 5.5 JavaScript validation logic
+
+```
+const form = document.getElementById("registrationForm");
+
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    // Clear previous messages
+    document.getElementById("nameError").textContent = "";
+    document.getElementById("emailError").textContent = "";
+    document.getElementById("passwordError").textContent = "";
+    document.getElementById("successMessage").textContent = "";
+
+    let isValid = true;
+
+    // Name validation
+    if (name === "") {
+        document.getElementById("nameError").textContent =
+            "Name is required.";
+        isValid = false;
+    } else if (name.length < 3) {
+        document.getElementById("nameError").textContent =
+            "Name must contain at least 3 characters.";
+        isValid = false;
+    }
+
+    // Email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email === "") {
+        document.getElementById("emailError").textContent =
+            "Email is required.";
+        isValid = false;
+    } else if (!emailPattern.test(email)) {
+        document.getElementById("emailError").textContent =
+            "Enter a valid email address.";
+        isValid = false;
+    }
+
+    // Password validation
+    if (password === "") {
+        document.getElementById("passwordError").textContent =
+            "Password is required.";
+        isValid = false;
+    } else if (password.length < 8) {
+        document.getElementById("passwordError").textContent =
+            "Password must contain at least 8 characters.";
+        isValid = false;
+    }
+
+    if (isValid) {
+        document.getElementById("successMessage").textContent =
+            "Validation successful!";
+    }
+});
+```
+
+The email regular expression is a basic format check, not a guarantee that the email address exists. Real applications should also handle server-side checks.
+
+### 5.6 Live validation
+
+Sometimes we want an error to disappear or update as soon as the user corrects a field instead of waiting until they submit the form.
+
+```
+const nameInput = document.getElementById("name");
+const nameError = document.getElementById("nameError");
+
+nameInput.addEventListener("input", function() {
+    const name = nameInput.value.trim();
+
+    if (name === "") {
+        nameError.textContent = "Name is required.";
+    } else if (name.length < 3) {
+        nameError.textContent =
+            "Name must contain at least 3 characters.";
+    } else {
+        nameError.textContent = "";
+    }
+});
+```
+
+Here, the `input` event runs whenever the user edits the field.
+
+### 5.7 Validating an Indian mobile-number field
+
+For a simple form that expects a 10-digit mobile number beginning with 6, 7, 8 or 9:
+
+```
+const mobilePattern = /^[6-9]\d{9}$/;
+
+const mobile = "9876543210";
+
+if (mobilePattern.test(mobile)) {
+    console.log("Valid format");
+} else {
+    console.log("Invalid format");
+}
+```
+
+This checks the expected format only; it does not establish whether the number is active or belongs to the user.
+
+### 5.8 Confirm password validation
+
+```
+const password = document.getElementById("password").value;
+const confirmPassword =
+    document.getElementById("confirmPassword").value;
+
+if (password !== confirmPassword) {
+    console.log("Passwords do not match");
+}
+```
+
+extend the registration form by adding a confirm-password input and its own inline error span.
+
+### 5.9 Show and hide password
+
+HTML:
+
+```
+<input type="password" id="password">
+<button type="button" id="togglePassword">Show</button>
+```
+
+JavaScript:
+
+```
+const passwordInput = document.getElementById("password");
+const toggleButton = document.getElementById("togglePassword");
+
+toggleButton.addEventListener("click", function() {
+    const isHidden = passwordInput.type === "password";
+
+    passwordInput.type = isHidden ? "text" : "password";
+    toggleButton.textContent = isHidden ? "Hide" : "Show";
+});
+```
+
+Notice that the button has `type="button"` so it does not submit a form accidentally when placed inside one.
+
+
+
+| Session | Topics                                   | Practical outcome                  |
+| ------- | ---------------------------------------- | ---------------------------------- |
+| 1       | Functions, parameters, return, scope     | Calculator functions               |
+| 2       | Arrays, objects, array methods           | Student marks management           |
+| 3       | DOM selection, content, styles, elements | Interactive page                   |
+| 4       | Events, listeners, bubbling, delegation  | To-do list                         |
+| 5       | Form validation and integration          | Registration form and Resume Maker |
+
+

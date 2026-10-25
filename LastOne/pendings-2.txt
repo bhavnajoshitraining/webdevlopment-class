@@ -1,0 +1,220 @@
+# Module 5: JavaScript – Practical Web Development (4 Hours)
+
+ covers Local Storage & JSON, Fetch API, Working with JSON Data, Error Handling & Loading States, and a hands-on mini project.
+
+## 5.1 Local Storage
+
+Local Storage allows us to save data in the browser so it remains available even after refreshing or closing the browser.
+
+### Example: Save and retrieve a username
+
+```
+localStorage.setItem("username", "Bhavna");
+
+let name = localStorage.getItem("username");
+
+console.log(name);
+
+localStorage.removeItem("username");
+```
+
+Explanation:
+
+- `setItem()` saves data.
+- `getItem()` retrieves data.
+- `removeItem()` deletes a particular item.
+- `clear()` removes all items from the current website's local storage.
+
+### Practical example: Save a to-do task
+
+```
+let task = "Learn JavaScript";
+
+localStorage.setItem("task", task);
+
+let savedTask = localStorage.getItem("task");
+4
+console.log(savedTask);
+```
+
+Important: Local Storage stores values as strings. To store arrays and objects, use JSON.
+
+## 5.2 JSON (JavaScript Object Notation)
+
+JSON is a format used to store and exchange structured data between applications.
+
+### JavaScript object
+
+```
+let student = {
+    name: "Amit",
+    course: "Web Development",
+    marks: 85
+};
+```
+
+### Convert an object to JSON
+
+```
+let jsonData = JSON.stringify(student);
+
+console.log(jsonData);
+```
+
+Output:
+
+```
+{"name":"Amit","course":"Web Development","marks":85}
+```
+
+### Convert JSON back to an object
+
+```
+let studentData = JSON.parse(jsonData);
+
+console.log(studentData.name);
+console.log(studentData.marks);
+```
+
+### Store an array of tasks in Local Storage
+
+```
+let tasks = [
+    { id: 1, title: "Learn HTML", completed: true },
+    { id: 2, title: "Learn CSS", completed: false }
+];
+
+localStorage.setItem("tasks", JSON.stringify(tasks));
+
+let savedTasks = JSON.parse(localStorage.getItem("tasks"));
+
+console.log(savedTasks);
+```
+
+This is useful for making a to-do list remember tasks after a page refresh.
+
+## 5.3 Fetch API
+
+The Fetch API allows JavaScript to request data from a server or API.
+
+For example, we can fetch user details from a public API and display them on a webpage.
+
+```
+fetch("https://jsonplaceholder.typicode.com/users")
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error("Failed to fetch users");
+        }
+
+        return response.json();
+    })
+    .then(function(users) {
+        console.log(users);
+    })
+    .catch(function(error) {
+        console.log("Error:", error.message);
+    });
+```
+
+### How it works
+
+1. `fetch()` sends the request.
+2. `response.ok` checks whether the HTTP response status indicates success.
+3. `response.json()` reads the response body and parses the JSON data.
+4. `.then()` processes the successful result.
+5. `.catch()` handles errors such as network failures or errors thrown in earlier handlers.
+
+Note: `fetch()` does not automatically reject its promise for HTTP errors such as 404 or 500, so checking `response.ok` is important.
+
+## 5.4 Display API Data on a Webpage
+
+HTML:
+
+```
+<h2>Users</h2>
+<button id="loadUsers">Load Users</button>
+<p id="message"></p>
+<div id="userList"></div>
+```
+
+JavaScript:
+
+```
+const button = document.getElementById("loadUsers");
+const message = document.getElementById("message");
+const userList = document.getElementById("userList");
+
+button.addEventListener("click", async function() {
+    message.textContent = "Loading users...";
+    userList.replaceChildren();
+    button.disabled = true;
+
+    try {
+        const response = await fetch(
+            "https://jsonplaceholder.typicode.com/users"
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to load users");
+        }
+
+        const users = await response.json();
+
+        users.forEach(function(user) {
+            const card = document.createElement("div");
+            const heading = document.createElement("h3");
+            const email = document.createElement("p");
+
+            heading.textContent = user.name;
+            email.textContent = user.email;
+
+            card.append(heading, email);
+            userList.appendChild(card);
+        });
+
+        message.textContent = "Users loaded successfully.";
+    } catch (error) {
+        message.textContent = error.message;
+    } finally {
+        button.disabled = false;
+    }
+});
+```
+
+This example introduces `async` and `await`, which make promise-based code easier to read.
+
+## 5.5 Error Handling and Loading States
+
+When an application requests data, the request may take time or fail. We should show the user what is happening.
+
+- Loading: Display a message while waiting.
+- Success: Display the returned data.
+- Error: Display a helpful error message.
+- Finally: Restore the interface after the request completes.
+
+Example:
+
+```
+async function loadData() {
+    try {
+        console.log("Loading...");
+
+        const response = await fetch(
+            "https://jsonplaceholder.typicode.com/posts/1"
+        );
+
+        if (!response.ok) {
+            throw new Error("Request failed");
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+    } catch (error) {
+        console.log("Something went wrong:", error.message);
+    } finally {
+        console.log("Request completed.");
+    }
+}
+
+loadData();
